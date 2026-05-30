@@ -43,9 +43,9 @@ This file contains implementation-ready CSS tokens for the MDX Presentation Engi
 
 ```css
 :root {
-  --font-display: 'Canela', 'Cormorant Garamond', 'Spectral', Georgia, serif;
-  --font-sans: Inter, 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: 'PT Serif', 'Spectral', Georgia, serif;
+  --font-sans: 'PT Sans', 'Source Sans 3', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'PT Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --type-display: clamp(3rem, 6vw, 4rem);
   --type-h1: clamp(2rem, 4vw, 2.5rem);

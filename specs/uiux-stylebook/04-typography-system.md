@@ -18,16 +18,18 @@ The system combines:
 
 | Role | Suggested font | Use |
 |---|---|---|
-| Display Serif | Canela, Cormorant Garamond, Spectral, Georgia fallback | Slide titles, large statements, quotes |
-| Text Sans | Inter, Source Sans 3, system UI fallback | Body copy, labels, lists, captions |
-| Mono | IBM Plex Mono, JetBrains Mono, ui-monospace fallback | Code, filenames, technical notes |
+| Display Serif | PT Serif, Spectral, Georgia fallback | Slide titles, large statements, quotes |
+| Text Sans | PT Sans, Source Sans 3, Inter, system UI fallback | Body copy, labels, lists, captions |
+| Mono | PT Mono, IBM Plex Mono, JetBrains Mono, ui-monospace fallback | Code, filenames, technical notes |
+
+PT Serif, PT Sans, and PT Mono are the implementation fonts because they support both Latin and Ukrainian Cyrillic while preserving the editorial serif, quiet sans, and technical mono roles.
 
 Implementation-safe stack:
 
 ```css
---font-display: 'Canela', 'Cormorant Garamond', 'Spectral', Georgia, serif;
---font-sans: Inter, 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
---font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+--font-display: 'PT Serif', 'Spectral', Georgia, serif;
+--font-sans: 'PT Sans', 'Source Sans 3', Inter, ui-sans-serif, system-ui, sans-serif;
+--font-mono: 'PT Mono', 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 ```
 
 ## Type scale
