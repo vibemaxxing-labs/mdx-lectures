@@ -62,7 +62,7 @@
   --space-6: 6rem;
 
   --outer-margin: clamp(1.25rem, 6vw, 6rem);
-  --title-rail-width: clamp(4.25rem, 10vw, 10rem);
+  --title-rail-width: clamp(4.25rem, 5vw, 5rem);
   --content-max-width: 42.5rem;
   --content-wide-max-width: 47.5rem;
 }
@@ -116,9 +116,8 @@ kbd {
   left: var(--outer-margin);
   z-index: 2;
   display: flex;
-  max-height: 70dvh;
+  flex-direction: column;
   width: var(--title-rail-width);
-  align-items: flex-end;
   gap: var(--space-2);
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -141,9 +140,9 @@ kbd {
   max-height: 64dvh;
   color: var(--color-text);
   font-family: var(--font-display);
-  font-size: 3.25rem;
+  font-size: 2rem;
   font-weight: 400;
-  letter-spacing: 0;
+  letter-spacing: 0.1em;
   line-height: 0.95;
 }
 
