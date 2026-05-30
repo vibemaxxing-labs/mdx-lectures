@@ -1,0 +1,15 @@
+---
+title: Code Highlighting
+subtitle: Shiki-backed highlighting keeps examples readable on a projector.
+---
+
+```tsx
+type SlideFrontmatter = {
+  title: string;
+  subtitle?: string;
+};
+
+export function SlideTitle({ title }: { title: string }) {
+  return <h1>{title}</h1>;
+}
+```

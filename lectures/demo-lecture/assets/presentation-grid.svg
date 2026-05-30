@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Presentation grid asset</title>
+  <desc id="desc">A stylized portrait slide canvas with markdown, image, component, and diagram regions.</desc>
+  <rect width="1200" height="720" fill="#f0e4ca"/>
+  <rect x="78" y="64" width="1044" height="592" fill="#fbf7ec" stroke="#17211b" stroke-width="4"/>
+  <path d="M160 154h360M160 205h260M160 256h420" stroke="#17211b" stroke-width="22" stroke-linecap="square"/>
+  <rect x="650" y="136" width="300" height="380" fill="#d7f86f" stroke="#17211b" stroke-width="4"/>
+  <circle cx="735" cy="232" r="42" fill="#fbf7ec" stroke="#17211b" stroke-width="4"/>
+  <path d="M690 438l86-112 62 78 45-55 82 89z" fill="#426052"/>
+  <rect x="160" y="360" width="390" height="36" fill="#426052"/>
+  <rect x="160" y="420" width="300" height="36" fill="#426052"/>
+  <rect x="160" y="480" width="350" height="36" fill="#426052"/>
+  <path d="M1004 158l42 128-110-78h136l-110 78z" fill="#d7f86f" stroke="#17211b" stroke-width="4"/>
+</svg>
