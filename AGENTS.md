@@ -89,6 +89,8 @@ pnpm test:browser
 
 ## Testing Expectations
 
+When adding a feature or changing existing behavior, add new tests or update existing tests as needed in the same change. Do not leave test coverage stale when routes, validation, rendering, keyboard behavior, MDX capabilities, or fullscreen layout expectations change.
+
 Before finishing work that changes app behavior, run:
 
 ```bash
