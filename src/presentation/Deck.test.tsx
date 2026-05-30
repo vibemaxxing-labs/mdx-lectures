@@ -43,11 +43,14 @@ describe("Deck", () => {
   });
 
   it("renders title and subtitle from frontmatter", () => {
-    render(<Deck lectures={lectures} />);
+    const { container } = render(<Deck lectures={lectures} />);
 
     expect(screen.getByRole("heading", { level: 1, name: "Opening" })).toBeInTheDocument();
     expect(screen.getByText("Optional subtitle")).toBeInTheDocument();
     expect(screen.getByText("First slide body")).toBeInTheDocument();
+    expect(container.querySelector(".slide-title-rail")).toContainElement(screen.getByRole("heading", { level: 1 }));
+    expect(container.querySelector(".slide-content")).toHaveTextContent("First slide body");
+    expect(container.querySelector(".slide-header")).not.toBeInTheDocument();
   });
 
   it("does not render a missing subtitle", () => {

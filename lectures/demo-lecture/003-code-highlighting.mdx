@@ -1,7 +1,9 @@
 ---
 title: Code Highlighting
-subtitle: Shiki-backed highlighting keeps examples readable on a projector.
+subtitle: Syntax highlighted TSX
 ---
+
+## Code blocks are primary slide objects
 
 ```tsx
 type SlideFrontmatter = {
@@ -13,3 +15,5 @@ export function SlideTitle({ title }: { title: string }) {
   return <h1>{title}</h1>;
 }
 ```
+
+The language label, muted panel, and wrapped lines keep examples readable without adding scroll.

@@ -8,14 +8,13 @@ type SlideFrameProps = PropsWithChildren<{
 
 export function SlideFrame({ children, lecture, slide }: SlideFrameProps) {
   return (
-    <main className="slide-frame" data-testid="slide-frame">
-      <header className="slide-header">
-        <p className="lecture-label">{lecture.slug.replaceAll("-", " ")}</p>
-        <div>
-          <h1>{slide.frontmatter.title}</h1>
-          {slide.frontmatter.subtitle ? <p className="slide-subtitle">{slide.frontmatter.subtitle}</p> : null}
-        </div>
-      </header>
+    <main className="slide" data-lecture={lecture.slug} data-testid="slide-frame">
+      <aside className="slide-title-rail" aria-label="Slide title">
+        {slide.frontmatter.subtitle ? (
+          <p className="slide-title-rail__subtitle">{slide.frontmatter.subtitle}</p>
+        ) : null}
+        <h1 className="slide-title-rail__title">{slide.frontmatter.title}</h1>
+      </aside>
       <section className="slide-content">{children}</section>
     </main>
   );

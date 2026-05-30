@@ -1,6 +1,12 @@
 ---
 title: Assets and Images
-subtitle: Lecture-local media lives beside the deck in an assets folder.
+subtitle: Lecture-local media
 ---
 
-![A framed slide asset showing a presentation grid](./assets/presentation-grid.svg)
+import presentationGrid from "./assets/presentation-grid.svg";
+
+<Figure
+  src={presentationGrid}
+  alt="A framed slide asset showing a presentation grid"
+  caption="Lecture-local assets can be composed with captions when the context matters."
+/>
