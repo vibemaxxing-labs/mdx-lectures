@@ -200,6 +200,16 @@ kbd {
   max-width: var(--content-max-width);
 }
 
+.slide-content::before {
+  content: '';
+  position: absolute;
+  width: 0px;
+  border-left: 1px dashed var(--color-rule);
+  height: 100%;
+  left: -3em;
+  bottom: var(--space-2);
+}
+
 .slide-content h1,
 .slide-content h2,
 .slide-content h3,
