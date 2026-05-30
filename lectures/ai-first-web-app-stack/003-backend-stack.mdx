@@ -1,0 +1,22 @@
+---
+title: BE Stack
+subtitle: NestJS / TypeScript
+---
+
+## Backend тримає бізнес-логіку
+
+```text
+src/
+  app.module.ts
+  users/
+    users.controller.ts
+    users.service.ts
+    users.module.ts
+```
+
+<Callout variant="note" title="NestJS">
+  Controller приймає HTTP-запит, service виконує правило, module збирає залежності разом.
+</Callout>
+
+Це зручно, коли правил багато і їх треба тестувати окремо від UI.
+

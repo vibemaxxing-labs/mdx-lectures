@@ -1,0 +1,19 @@
+---
+title: Типова система
+subtitle: FE / BE / DB
+---
+
+## Система - це набір відповідальностей
+
+```mermaid
+flowchart LR
+  U[User] --> FE[Frontend]
+  FE --> BE[Backend]
+  BE --> DB[(Database)]
+  BE --> API[External APIs]
+```
+
+<Callout variant="principle" title="Decomposition">
+  Ділимо систему так, щоб кожна частина мала одну причину змінюватися: UI показує, backend вирішує правила, база зберігає стан.
+</Callout>
+

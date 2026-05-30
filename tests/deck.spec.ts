@@ -126,3 +126,24 @@ test("all demo slides fit without scrolling on desktop and mobile", async ({ pag
     }
   }
 });
+
+test("all AI-first stack lecture slides fit without scrolling on desktop and mobile", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+
+  for (const viewport of [
+    { width: 1280, height: 720 },
+    { width: 390, height: 844 }
+  ]) {
+    await page.setViewportSize(viewport);
+
+    for (let slideNumber = 1; slideNumber <= 8; slideNumber += 1) {
+      await page.goto(`/lectures/ai-first-web-app-stack/${slideNumber}`);
+      if (slideNumber === 1) {
+        await expect(page.locator(".mermaid svg")).toBeVisible();
+      }
+
+      await expect(page.getByTestId("slide-frame")).toHaveCSS("width", `${viewport.width}px`);
+      await expectNoViewportOverflow(page);
+    }
+  }
+});
