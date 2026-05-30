@@ -110,26 +110,6 @@ kbd {
   color: var(--color-text);
 }
 
-.slide::before,
-.slide::after {
-  position: absolute;
-  right: var(--outer-margin);
-  left: var(--outer-margin);
-  height: 1px;
-  background: var(--color-rule);
-  content: "";
-  opacity: 0.75;
-  pointer-events: none;
-}
-
-.slide::before {
-  top: var(--space-4);
-}
-
-.slide::after {
-  bottom: var(--space-4);
-}
-
 .slide-title-rail {
   position: absolute;
   bottom: calc(var(--outer-margin) + var(--space-2));
