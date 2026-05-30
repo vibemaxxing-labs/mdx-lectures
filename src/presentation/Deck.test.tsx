@@ -40,6 +40,8 @@ const lectures: LectureMap = {
 describe("Deck", () => {
   beforeEach(() => {
     window.history.replaceState(null, "", "/lectures/demo-lecture/1");
+    window.localStorage.clear();
+    document.documentElement.removeAttribute("data-theme");
   });
 
   it("renders title and subtitle from frontmatter", () => {
@@ -51,6 +53,7 @@ describe("Deck", () => {
     expect(container.querySelector(".slide-title-rail")).toContainElement(screen.getByRole("heading", { level: 1 }));
     expect(container.querySelector(".slide-content")).toHaveTextContent("First slide body");
     expect(container.querySelector(".slide-header")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Switch to dark theme" })).toHaveClass("theme-toggle");
   });
 
   it("does not render a missing subtitle", () => {
@@ -84,5 +87,32 @@ describe("Deck", () => {
     fireEvent.keyDown(window, { key: "ArrowRight" });
     expect(screen.getByText("Second slide body")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/lectures/demo-lecture/2");
+  });
+
+  it("toggles and persists the color scheme with the T key", () => {
+    render(<Deck lectures={lectures} />);
+
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(screen.getByRole("button", { name: "Switch to dark theme" })).toHaveTextContent("☾");
+
+    fireEvent.keyDown(window, { key: "t" });
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(window.localStorage.getItem("md-slides-theme")).toBe("dark");
+    expect(screen.getByRole("button", { name: "Switch to light theme" })).toHaveTextContent("☼");
+
+    fireEvent.keyDown(window, { key: "T" });
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(window.localStorage.getItem("md-slides-theme")).toBe("light");
+    expect(screen.getByRole("button", { name: "Switch to dark theme" })).toHaveTextContent("☾");
+  });
+
+  it("toggles the color scheme from the visible switch", () => {
+    render(<Deck lectures={lectures} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Switch to dark theme" }));
+
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(screen.getByRole("button", { name: "Switch to light theme" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Switch to light theme" })).toHaveTextContent("☼");
   });
 });

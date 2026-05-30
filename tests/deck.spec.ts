@@ -62,7 +62,7 @@ test("demo lecture is fullscreen and keyboard navigable", async ({ page }) => {
     };
   });
   await expectNoViewportOverflow(page);
-  expect(anatomy.controls).toBe(0);
+  expect(anatomy.controls).toBe(1);
   expect(anatomy.background).toBe("rgb(247, 244, 239)");
   expect(anatomy.writingMode).toBe("vertical-rl");
   expect(anatomy.railLeft).toBeLessThan(anatomy.contentLeft);
@@ -104,6 +104,69 @@ test("slide canvas uses the dark stylebook palette when dark mode is requested",
 
   expect(palette.background).toBe("rgb(23, 22, 19)");
   expect(palette.text).toBe("rgb(232, 225, 213)");
+});
+
+test("code blocks keep readable token colors in dark mode", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/lectures/ai-first-web-app-stack/8");
+
+  const contrast = await page
+    .locator("pre", { hasText: "Create a pnpm monorepo" })
+    .evaluate((pre) => {
+      const sample = pre.querySelector("span");
+      if (!sample) return 0;
+
+      function rgbParts(color: string) {
+        const match = color.match(/\d+(\.\d+)?/g);
+        return match ? match.slice(0, 3).map(Number) : [0, 0, 0];
+      }
+
+      function luminance(color: string) {
+        return rgbParts(color)
+          .map((channel) => {
+            const value = channel / 255;
+            return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+          })
+          .reduce((total, value, index) => total + value * [0.2126, 0.7152, 0.0722][index], 0);
+      }
+
+      const foreground = luminance(getComputedStyle(sample).color);
+      const background = luminance(getComputedStyle(pre).backgroundColor);
+      return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+    });
+
+  expect(contrast).toBeGreaterThanOrEqual(4.5);
+});
+
+test("theme scheme toggles from the visible switch", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/lectures/demo-lecture/1");
+
+  const themeToggle = page.getByRole("button", { name: "Switch to dark theme" });
+  await expect(themeToggle).toBeVisible();
+  await expect(themeToggle).toHaveText("☾");
+  await expect(page.getByTestId("slide-frame")).toHaveCSS("background-color", "rgb(247, 244, 239)");
+  await themeToggle.click();
+  await expect(page.getByTestId("slide-frame")).toHaveCSS("background-color", "rgb(23, 22, 19)");
+  const lightThemeToggle = page.getByRole("button", { name: "Switch to light theme" });
+  await expect(lightThemeToggle).toHaveAttribute("aria-pressed", "true");
+  await expect(lightThemeToggle).toHaveText("☼");
+
+  const themeState = await page.evaluate(() => ({
+    controls: Array.from(document.querySelectorAll("button, nav, [role='button']")).length,
+    storedTheme: window.localStorage.getItem("md-slides-theme"),
+    theme: document.documentElement.dataset.theme
+  }));
+
+  expect(themeState).toEqual({
+    controls: 1,
+    storedTheme: "dark",
+    theme: "dark"
+  });
+  await expectNoViewportOverflow(page);
+
+  await page.reload();
+  await expect(page.getByTestId("slide-frame")).toHaveCSS("background-color", "rgb(23, 22, 19)");
 });
 
 test("all demo slides fit without scrolling on desktop and mobile", async ({ page }) => {

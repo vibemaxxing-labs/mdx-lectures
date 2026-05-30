@@ -110,6 +110,41 @@ kbd {
   color: var(--color-text);
 }
 
+.theme-toggle {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--outer-margin);
+  z-index: 3;
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--color-rule);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-surface-soft) 78%, transparent);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 70%, var(--color-rule));
+  background: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 0.25rem;
+}
+
 .slide-title-rail {
   position: absolute;
   bottom: calc(var(--outer-margin) + var(--space-2));
@@ -349,6 +384,14 @@ kbd {
   white-space: pre-wrap;
 }
 
+.slide-content pre code span {
+  color: var(--shiki-light, var(--color-text));
+}
+
+[data-theme="dark"] .slide-content pre code span {
+  color: var(--shiki-dark, var(--color-text));
+}
+
 .slide-content pre code[data-language]::before {
   position: absolute;
   top: 0.75rem;
@@ -356,7 +399,7 @@ kbd {
   color: var(--color-text-muted);
   content: attr(data-language);
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: 0.5rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   line-height: 1;
@@ -494,6 +537,11 @@ kbd {
 
   .slide-title-rail__subtitle {
     font-size: 0.58rem;
+  }
+
+  .theme-toggle {
+    top: var(--space-2);
+    right: var(--outer-margin);
   }
 
   .slide-content {
