@@ -67,13 +67,17 @@ describe("Deck", () => {
   it("advances and rewinds with arrow keys while updating the URL", () => {
     render(<Deck lectures={lectures} />);
 
+    expect(document.title).toBe("_slide 1/2");
+
     fireEvent.keyDown(window, { key: "ArrowRight" });
     expect(screen.getByText("Second slide body")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/lectures/demo-lecture/2");
+    expect(document.title).toBe("_slide 2/2");
 
     fireEvent.keyDown(window, { key: "ArrowLeft" });
     expect(screen.getByText("First slide body")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/lectures/demo-lecture/1");
+    expect(document.title).toBe("_slide 1/2");
   });
 
   it("keeps bounds as no-ops", () => {

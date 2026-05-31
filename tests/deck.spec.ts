@@ -28,6 +28,7 @@ test("demo lecture is fullscreen and keyboard navigable", async ({ page }) => {
 
   const frame = page.getByTestId("slide-frame");
   await expect(frame).toBeVisible();
+  await expect(page).toHaveTitle("_slide 1/7");
   await expect(page.getByRole("heading", { name: "Markdown Demo Slides" })).toBeVisible();
   await expect(page.locator(".slide-title-rail")).toBeVisible();
 
@@ -70,6 +71,7 @@ test("demo lecture is fullscreen and keyboard navigable", async ({ page }) => {
 
   await page.keyboard.press("ArrowRight");
   await expect(page).toHaveURL(/\/lectures\/demo-lecture\/2$/);
+  await expect(page).toHaveTitle("_slide 2/7");
   await expect(page.getByRole("heading", { name: "Markdown and GFM" })).toBeVisible();
 
   for (let i = 0; i < 4; i += 1) {
@@ -77,11 +79,13 @@ test("demo lecture is fullscreen and keyboard navigable", async ({ page }) => {
   }
 
   await expect(page).toHaveURL(/\/lectures\/demo-lecture\/6$/);
+  await expect(page).toHaveTitle("_slide 6/7");
   await expect(page.locator(".mermaid svg")).toBeVisible();
   await expectNoViewportOverflow(page);
 
   await page.keyboard.press("ArrowRight");
   await expect(page).toHaveURL(/\/lectures\/demo-lecture\/7$/);
+  await expect(page).toHaveTitle("_slide 7/7");
   await expect(page.getByText("A slide should make one idea obvious")).toBeVisible();
 
   await page.keyboard.press("ArrowRight");

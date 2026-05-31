@@ -69,6 +69,10 @@ export function Deck({ lectures = lectureRegistry }: DeckProps) {
   const slide = lecture.slides[current.slideNumber - 1] ?? lecture.slides[0];
   const SlideComponent = slide.component;
 
+  useEffect(() => {
+    document.title = `_slide ${slide.number}/${lecture.slides.length}`;
+  }, [lecture.slides.length, slide.number]);
+
   const toggleTheme = useCallback(() => {
     setTheme((currentTheme) => (currentTheme === "light" ? "dark" : "light"));
   }, []);
