@@ -54,7 +54,7 @@ describe("LectureIndex", () => {
     render(<LectureIndex lectures={lectures} />);
 
     expect(document.title).toBe("_slide index");
-    expect(screen.getByRole("heading", { name: "Select lecture" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Select lecture" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /AI First Web App Stack/ })).toHaveAttribute(
       "href",
       "/lectures/ai-first-web-app-stack/1"

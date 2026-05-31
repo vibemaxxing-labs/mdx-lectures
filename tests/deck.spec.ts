@@ -98,7 +98,7 @@ test("root index lists lectures and opens the selected lecture", async ({ page }
 
   await expect(page.getByTestId("lecture-index")).toBeVisible();
   await expect(page).toHaveTitle("_slide index");
-  await expect(page.getByRole("heading", { name: "Select lecture" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Select lecture" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: /AI First Web App Stack/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Demo Lecture/ })).toBeVisible();
   await expect(page.getByText("8 slides")).toBeVisible();

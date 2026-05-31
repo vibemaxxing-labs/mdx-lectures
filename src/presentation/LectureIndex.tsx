@@ -41,9 +41,8 @@ export function LectureIndex({ lectures }: LectureIndexProps) {
         <p className="slide-title-rail__subtitle"></p>
         <h1 className="slide-title-rail__title"></h1>
       </aside>
-      <section className="lecture-index__content" aria-labelledby="lecture-index-title">
+      <section className="lecture-index__content" aria-label="Available lectures">
         <p className="lecture-index__eyebrow">Available lectures</p>
-        <h2 id="lecture-index-title">Select lecture</h2>
         <div className="lecture-index__list">
           {lectureList.map((lecture) => {
             const firstSlide = lecture.slides[0];
