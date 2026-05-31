@@ -120,9 +120,9 @@ kbd {
   height: 1.75rem;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--color-rule);
+  border: none;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--color-surface-soft) 78%, transparent);
+  background: transparent;
   color: var(--color-text);
   cursor: pointer;
   font-family: var(--font-display);
@@ -203,17 +203,17 @@ kbd {
 .slide-content::before {
   content: '';
   position: absolute;
-  width: 0.75rem;
+  width: 1rem;
   height: 100%;
   left: -3em;
   bottom: var(--space-2);
   background: var(--color-rule);
-  mask-image: url("data:image/svg+xml,%3Csvg width='12' height='36' viewBox='0 0 12 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0 C12 9 0 27 6 36' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg width='16' height='64' viewBox='0 0 16 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 8 0 L 10.3 4 L 12.24 8 L 13.54 12 L 14 16 L 13.54 20 L 12.24 24 L 10.3 28 L 8 32 L 5.7 36 L 3.76 40 L 2.46 44 L 2 48 L 2.46 52 L 3.76 56 L 5.7 60 L 8 64' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   mask-repeat: repeat-y;
-  mask-size: 0.75rem 2.25rem;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='12' height='36' viewBox='0 0 12 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0 C12 9 0 27 6 36' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-size: 1rem 4rem;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='16' height='64' viewBox='0 0 16 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 8 0 L 10.3 4 L 12.24 8 L 13.54 12 L 14 16 L 13.54 20 L 12.24 24 L 10.3 28 L 8 32 L 5.7 36 L 3.76 40 L 2.46 44 L 2 48 L 2.46 52 L 3.76 56 L 5.7 60 L 8 64' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   -webkit-mask-repeat: repeat-y;
-  -webkit-mask-size: 0.75rem 2.25rem;
+  -webkit-mask-size: 1rem 4rem;
 }
 
 .slide-content h1,
