@@ -19,6 +19,7 @@ export function SlideFrame({ children, lecture, onToggleTheme, slide, theme }: S
         aria-label={`Switch to ${nextTheme} theme`}
         aria-pressed={theme === "dark"}
         onClick={onToggleTheme}
+        tabIndex={-1}
       >
         <span aria-hidden="true">{theme === "light" ? "☾" : "☼"}</span>
       </button>
