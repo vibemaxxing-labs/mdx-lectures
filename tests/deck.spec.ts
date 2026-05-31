@@ -173,6 +173,24 @@ test("theme scheme toggles from the visible switch", async ({ page }) => {
   await expect(page.getByTestId("slide-frame")).toHaveCSS("background-color", "rgb(23, 22, 19)");
 });
 
+test("mermaid diagram colors follow theme switches", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/lectures/demo-lecture/6");
+
+  await expect(page.locator(".mermaid svg")).toBeVisible();
+
+  async function mermaidNodeFill() {
+    return page.locator(".mermaid svg .node rect").first().evaluate((node) => getComputedStyle(node).fill);
+  }
+
+  await expect.poll(mermaidNodeFill).toBe("rgb(234, 228, 216)");
+
+  await page.getByRole("button", { name: "Switch to dark theme" }).click();
+
+  await expect.poll(mermaidNodeFill).toBe("rgb(36, 33, 29)");
+  await expectNoViewportOverflow(page);
+});
+
 test("all demo slides fit without scrolling on desktop and mobile", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
 

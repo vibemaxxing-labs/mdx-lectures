@@ -32,10 +32,12 @@ export function MermaidBlock({ chart }: { chart: string }) {
 
   useEffect(() => {
     let cancelled = false;
+    let renderId = 0;
 
     async function renderDiagram() {
       if (!ref.current) return;
 
+      const currentRenderId = (renderId += 1);
       configureMermaid();
       setError(null);
       ref.current.removeAttribute("data-processed");
@@ -44,7 +46,7 @@ export function MermaidBlock({ chart }: { chart: string }) {
       try {
         await mermaid.run({ nodes: [ref.current] });
       } catch (renderError) {
-        if (!cancelled) {
+        if (!cancelled && currentRenderId === renderId) {
           setError(renderError instanceof Error ? renderError.message : "Could not render Mermaid diagram.");
         }
       }
@@ -52,8 +54,16 @@ export function MermaidBlock({ chart }: { chart: string }) {
 
     void renderDiagram();
 
+    const themeObserver = new MutationObserver((mutations) => {
+      if (mutations.some((mutation) => mutation.attributeName === "data-theme")) {
+        void renderDiagram();
+      }
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
     return () => {
       cancelled = true;
+      themeObserver.disconnect();
     };
   }, [chart]);
 
