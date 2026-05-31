@@ -194,6 +194,7 @@ kbd {
   align-content: center;
   justify-items: start;
   gap: var(--space-3);
+  padding-left: 3vw;
 }
 
 .slide-content > * {
