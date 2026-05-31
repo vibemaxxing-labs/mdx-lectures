@@ -2,48 +2,25 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { lectureRegistry, type LectureMap } from "../content/lectures";
 import { MdxProvider } from "../mdx/MdxProvider";
 import { resolveInitialRoute, slidePath } from "../routes";
+import { useThemeScheme } from "../theme";
 import { SlideFrame } from "./SlideFrame";
 
 type DeckProps = {
   lectures?: LectureMap;
 };
 
-type ThemeScheme = "light" | "dark";
-
-const themeStorageKey = "md-slides-theme";
-
-function isThemeScheme(value: string | null): value is ThemeScheme {
-  return value === "light" || value === "dark";
-}
-
-function getStoredThemeScheme(): ThemeScheme | null {
-  try {
-    const storedTheme = window.localStorage.getItem(themeStorageKey);
-    return isThemeScheme(storedTheme) ? storedTheme : null;
-  } catch {
-    return null;
-  }
-}
-
-function getPreferredThemeScheme(): ThemeScheme {
-  const storedTheme = getStoredThemeScheme();
-  if (storedTheme) return storedTheme;
-
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
-
-function persistThemeScheme(theme: ThemeScheme) {
-  try {
-    window.localStorage.setItem(themeStorageKey, theme);
-  } catch {
-    // Theme switching should still work when storage is unavailable.
-  }
+function defaultRoute() {
+  return {
+    lectureSlug: "demo-lecture",
+    slideNumber: 1,
+    shouldReplaceUrl: true
+  };
 }
 
 export function Deck({ lectures = lectureRegistry }: DeckProps) {
-  const initialRoute = useMemo(() => resolveInitialRoute(window.location.pathname, lectures), [lectures]);
+  const initialRoute = useMemo(() => resolveInitialRoute(window.location.pathname, lectures) ?? defaultRoute(), [lectures]);
   const [current, setCurrent] = useState(initialRoute);
-  const [theme, setTheme] = useState<ThemeScheme>(getPreferredThemeScheme);
+  const { theme, toggleTheme } = useThemeScheme();
 
   useEffect(() => {
     if (initialRoute.shouldReplaceUrl) {
@@ -52,13 +29,8 @@ export function Deck({ lectures = lectureRegistry }: DeckProps) {
   }, [initialRoute]);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    persistThemeScheme(theme);
-  }, [theme]);
-
-  useEffect(() => {
     function handlePopState() {
-      setCurrent(resolveInitialRoute(window.location.pathname, lectures));
+      setCurrent(resolveInitialRoute(window.location.pathname, lectures) ?? defaultRoute());
     }
 
     window.addEventListener("popstate", handlePopState);
@@ -72,10 +44,6 @@ export function Deck({ lectures = lectureRegistry }: DeckProps) {
   useEffect(() => {
     document.title = `_slide ${slide.number}/${lecture.slides.length}`;
   }, [lecture.slides.length, slide.number]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((currentTheme) => (currentTheme === "light" ? "dark" : "light"));
-  }, []);
 
   const navigate = useCallback(
     (direction: 1 | -1) => {

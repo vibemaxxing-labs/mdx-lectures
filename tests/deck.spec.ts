@@ -92,6 +92,26 @@ test("demo lecture is fullscreen and keyboard navigable", async ({ page }) => {
   await expect(page).toHaveURL(/\/lectures\/demo-lecture\/7$/);
 });
 
+test("root index lists lectures and opens the selected lecture", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+
+  await expect(page.getByTestId("lecture-index")).toBeVisible();
+  await expect(page).toHaveTitle("_slide index");
+  await expect(page.getByRole("heading", { name: "Select lecture" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /AI First Web App Stack/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Demo Lecture/ })).toBeVisible();
+  await expect(page.getByText("8 slides")).toBeVisible();
+  await expect(page.getByText("7 slides")).toBeVisible();
+  await expectNoViewportOverflow(page);
+
+  await page.getByRole("link", { name: /AI First Web App Stack/ }).click();
+
+  await expect(page).toHaveURL(/\/lectures\/ai-first-web-app-stack\/1$/);
+  await expect(page.getByTestId("slide-frame")).toBeVisible();
+  await expect(page).toHaveTitle("_slide 1/8");
+});
+
 test("slide canvas uses the dark stylebook palette when dark mode is requested", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/lectures/demo-lecture/1");

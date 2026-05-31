@@ -16,6 +16,12 @@ const lectures = {
 };
 
 describe("routes", () => {
+  it("parses root routes", () => {
+    expect(parseRoute("/")).toEqual({
+      kind: "root"
+    });
+  });
+
   it("parses lecture routes", () => {
     expect(parseRoute("/lectures/demo-lecture/6")).toEqual({
       kind: "lecture",
@@ -28,12 +34,8 @@ describe("routes", () => {
     expect(slidePath("demo-lecture", 1)).toBe("/lectures/demo-lecture/1");
   });
 
-  it("redirects root to the demo lecture", () => {
-    expect(resolveInitialRoute("/", lectures)).toEqual({
-      lectureSlug: "demo-lecture",
-      slideNumber: 1,
-      shouldReplaceUrl: true
-    });
+  it("leaves root routes unresolved for the app index", () => {
+    expect(resolveInitialRoute("/", lectures)).toBeNull();
   });
 
   it("keeps valid lecture routes", () => {

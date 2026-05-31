@@ -40,11 +40,7 @@ export function resolveInitialRoute(pathname: string, lectures: LectureMap) {
   const route = parseRoute(pathname);
 
   if (route.kind === "root") {
-    return {
-      lectureSlug: "demo-lecture",
-      slideNumber: 1,
-      shouldReplaceUrl: true
-    };
+    return null;
   }
 
   if (route.kind === "lecture" && lectures[route.lectureSlug]?.slides[route.slideNumber - 1]) {
