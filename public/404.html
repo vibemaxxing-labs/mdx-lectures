@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // SPA redirect for GitHub Pages
+      // Preserves the path so the client-side router can handle it
+      sessionStorage.setItem("redirect", location.href);
+      location.replace(
+        location.pathname.split("/").slice(0, 2).join("/") + "/"
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
