@@ -1,0 +1,15 @@
+---
+title: <i><b>Core</b></i> компоненти системи
+subtitle: "*** ** *"
+---
+
+### з чого складається типова web-app система?
+
+```mermaid
+flowchart LR
+  User --> Frontend
+  Frontend -->|request| Backend
+  Backend -->|query| Database
+  Database --> |data| Backend
+  Backend -->|response| Frontend
+```
