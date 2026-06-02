@@ -1,6 +1,11 @@
 import mermaid from "mermaid";
 import { useEffect, useId, useRef, useState } from "react";
 
+type RenderedDiagram = {
+  bindFunctions?: (element: Element) => void;
+  svg: string;
+};
+
 function cssToken(name: string, fallback: string) {
   if (typeof document === "undefined") return fallback;
 
@@ -25,28 +30,47 @@ function configureMermaid() {
   });
 }
 
+function observeThemeChanges(onChange: () => void) {
+  if (typeof document === "undefined" || typeof MutationObserver === "undefined") return () => {};
+
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((mutation) => mutation.attributeName === "data-theme")) {
+      onChange();
+    }
+  });
+
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  return () => observer.disconnect();
+}
+
 export function MermaidBlock({ chart }: { chart: string }) {
   const mermaidId = `mermaid-${useId().replace(/:/g, "")}`;
   const ref = useRef<HTMLDivElement>(null);
+  const [diagram, setDiagram] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [themeVersion, setThemeVersion] = useState(0);
+
+  useEffect(() => {
+    return observeThemeChanges(() => setThemeVersion((version) => version + 1));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
-    let renderId = 0;
 
     async function renderDiagram() {
-      if (!ref.current) return;
-
-      const currentRenderId = (renderId += 1);
       configureMermaid();
       setError(null);
-      ref.current.removeAttribute("data-processed");
-      ref.current.textContent = chart;
 
       try {
-        await mermaid.run({ nodes: [ref.current] });
+        const renderedDiagram = await mermaid.render(mermaidId, chart);
+
+        if (!cancelled) {
+          setDiagram(renderedDiagram);
+        }
       } catch (renderError) {
-        if (!cancelled && currentRenderId === renderId) {
+        if (!cancelled) {
+          setDiagram(null);
           setError(renderError instanceof Error ? renderError.message : "Could not render Mermaid diagram.");
         }
       }
@@ -54,22 +78,20 @@ export function MermaidBlock({ chart }: { chart: string }) {
 
     void renderDiagram();
 
-    const themeObserver = new MutationObserver((mutations) => {
-      if (mutations.some((mutation) => mutation.attributeName === "data-theme")) {
-        void renderDiagram();
-      }
-    });
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
     return () => {
       cancelled = true;
-      themeObserver.disconnect();
     };
-  }, [chart]);
+  }, [chart, mermaidId, themeVersion]);
+
+  useEffect(() => {
+    if (!diagram?.bindFunctions || !ref.current) return;
+
+    diagram.bindFunctions(ref.current);
+  }, [diagram]);
 
   return (
     <figure className="mermaid-frame" aria-label="Mermaid diagram">
-      <div id={mermaidId} className="mermaid" ref={ref} />
+      <div className="mermaid" ref={ref} dangerouslySetInnerHTML={{ __html: diagram?.svg ?? "" }} />
       {error ? <figcaption className="mermaid-error">{error}</figcaption> : null}
     </figure>
   );

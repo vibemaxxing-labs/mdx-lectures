@@ -56,6 +56,33 @@ describe("Deck", () => {
     expect(screen.getByRole("button", { name: "Switch to dark theme" })).toHaveClass("theme-toggle");
   });
 
+  it("renders inline emphasis tags in frontmatter text", () => {
+    const inlineMarkupLectures: LectureMap = {
+      "demo-lecture": {
+        ...lectures["demo-lecture"],
+        slides: [
+          {
+            ...lectures["demo-lecture"].slides[0],
+            frontmatter: {
+              title: "<i><b>Core</b></i> компоненти системи",
+              subtitle: "<b>Allowed</b> <script>escaped</script>"
+            }
+          },
+          lectures["demo-lecture"].slides[1]
+        ]
+      }
+    };
+    const { container } = render(<Deck lectures={inlineMarkupLectures} />);
+
+    const heading = screen.getByRole("heading", { level: 1, name: "Core компоненти системи" });
+    expect(heading.querySelector("i b")).toHaveTextContent("Core");
+
+    const subtitle = container.querySelector(".slide-title-rail__subtitle");
+    expect(subtitle?.querySelector("b")).toHaveTextContent("Allowed");
+    expect(subtitle?.querySelector("script")).not.toBeInTheDocument();
+    expect(subtitle).toHaveTextContent("Allowed <script>escaped</script>");
+  });
+
   it("does not render a missing subtitle", () => {
     window.history.replaceState(null, "", "/lectures/demo-lecture/2");
     render(<Deck lectures={lectures} />);

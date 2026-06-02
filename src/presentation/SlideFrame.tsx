@@ -8,6 +8,18 @@ type SlideFrameProps = PropsWithChildren<{
   theme: "light" | "dark";
 }>;
 
+function escapeInlineMarkup(value: string) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderInlineEmphasis(value: string) {
+  return escapeInlineMarkup(value).replace(/&lt;(\/?)(b|i)&gt;/gi, "<$1$2>");
+}
+
+function InlineFrontmatterText({ value }: { value: string }) {
+  return <span dangerouslySetInnerHTML={{ __html: renderInlineEmphasis(value) }} />;
+}
+
 export function SlideFrame({ children, lecture, onToggleTheme, slide, theme }: SlideFrameProps) {
   const nextTheme = theme === "light" ? "dark" : "light";
 
@@ -25,9 +37,13 @@ export function SlideFrame({ children, lecture, onToggleTheme, slide, theme }: S
       </button>
       <aside className="slide-title-rail" aria-label="Slide title">
         {slide.frontmatter.subtitle ? (
-          <p className="slide-title-rail__subtitle">{slide.frontmatter.subtitle}</p>
+          <p className="slide-title-rail__subtitle">
+            <InlineFrontmatterText value={slide.frontmatter.subtitle} />
+          </p>
         ) : null}
-        <h1 className="slide-title-rail__title">{slide.frontmatter.title}</h1>
+        <h1 className="slide-title-rail__title">
+          <InlineFrontmatterText value={slide.frontmatter.title} />
+        </h1>
       </aside>
       <section className="slide-content">{children}</section>
     </main>

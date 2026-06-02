@@ -1,5 +1,5 @@
 import { MDXProvider } from "@mdx-js/react";
-import type { ComponentProps, PropsWithChildren, ReactElement } from "react";
+import type { PropsWithChildren } from "react";
 import { MermaidBlock } from "./MermaidBlock";
 
 type CalloutVariant = "note" | "tip" | "warning" | "principle";
@@ -44,23 +44,11 @@ function Figure({
   );
 }
 
-function Pre(props: ComponentProps<"pre">) {
-  const child = props.children as ReactElement<ComponentProps<"code">> | undefined;
-  const className = child?.props?.className ?? "";
-
-  if (typeof child?.props?.children === "string" && className.includes("language-mermaid")) {
-    return <MermaidBlock chart={child.props.children} />;
-  }
-
-  return <pre {...props} />;
-}
-
 const components = {
   Callout,
   Figure,
   MermaidBlock,
-  Metric,
-  pre: Pre
+  Metric
 };
 
 export function MdxProvider({ children }: PropsWithChildren) {

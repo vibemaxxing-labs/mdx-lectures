@@ -192,6 +192,20 @@ kbd {
   line-height: 0.95;
 }
 
+.slide-title-rail__title b,
+.slide-title-rail__title strong,
+.slide-title-rail__subtitle b,
+.slide-title-rail__subtitle strong {
+  font-weight: 700;
+}
+
+.slide-title-rail__title i,
+.slide-title-rail__title em,
+.slide-title-rail__subtitle i,
+.slide-title-rail__subtitle em {
+  font-style: italic;
+}
+
 .slide-content {
   position: absolute;
   inset:
