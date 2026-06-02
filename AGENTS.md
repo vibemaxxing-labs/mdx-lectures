@@ -91,14 +91,16 @@ pnpm test:browser
 
 When adding a feature or changing existing behavior, add new tests or update existing tests as needed in the same change. Do not leave test coverage stale when routes, validation, rendering, keyboard behavior, MDX capabilities, or fullscreen layout expectations change.
 
-Before finishing work that changes app behavior, run:
+Do not run tests automatically after every change. Execute test commands only when explicitly requested by the user.
+
+When the user asks to run the standard verification for app behavior changes, run:
 
 ```bash
 pnpm test:run
 pnpm build
 ```
 
-For UI, routing, keyboard navigation, Mermaid, or fullscreen layout changes, also run:
+When the user asks to run browser verification for UI, routing, keyboard navigation, Mermaid, or fullscreen layout changes, also run:
 
 ```bash
 pnpm test:browser
