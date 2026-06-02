@@ -30,14 +30,16 @@ function Metric({ label, value }: { label: string; value: string }) {
 function Figure({
   alt = "",
   caption,
+  plain = false,
   src
 }: {
   alt?: string;
   caption?: string;
+  plain?: boolean;
   src: string;
 }) {
   return (
-    <figure className="figure">
+    <figure className={plain ? "figure figure--plain" : "figure"}>
       <img alt={alt} src={src} />
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>

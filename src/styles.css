@@ -545,6 +545,11 @@ kbd {
   background: var(--color-surface-soft);
 }
 
+.figure--plain img {
+  border: none;
+  background: none;
+}
+
 .figure figcaption,
 .mermaid-frame figcaption {
   max-width: 58ch;
