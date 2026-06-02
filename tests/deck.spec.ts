@@ -1,18 +1,19 @@
 import { expect, test } from "@playwright/test";
 
-async function expectNoViewportOverflow(page: import("@playwright/test").Page) {
-  const overflow = await page.evaluate(() => ({
+async function expectNoViewportOverflow(page: import("@playwright/test").Page, allowedScrollContainers: string[] = []) {
+  const overflow = await page.evaluate((allowedClassNames) => ({
     height: window.innerHeight,
     scrollContainers: Array.from(document.querySelectorAll("*"))
       .filter((element) => {
         const style = getComputedStyle(element);
         return /(auto|scroll)/.test(`${style.overflow}${style.overflowX}${style.overflowY}`);
       })
-      .map((element) => (typeof element.className === "string" && element.className ? element.className : element.tagName)),
+      .map((element) => (typeof element.className === "string" && element.className ? element.className : element.tagName))
+      .filter((className) => !allowedClassNames.includes(className)),
     width: window.innerWidth,
     x: document.documentElement.scrollWidth,
     y: document.documentElement.scrollHeight
-  }));
+  }), allowedScrollContainers);
 
   expect(overflow.x).toBe(overflow.width);
   expect(overflow.y).toBe(overflow.height);
@@ -209,6 +210,111 @@ test("mermaid diagram colors follow theme switches", async ({ page }) => {
 
   await expect.poll(mermaidNodeFill).toBe("rgb(36, 33, 29)");
   await expectNoViewportOverflow(page);
+});
+
+test("mermaid diagrams open fullscreen and close before slide navigation", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/lectures/demo-lecture/6");
+
+  const inlineDiagram = page.locator(".mermaid-frame > .mermaid svg");
+  await expect(inlineDiagram).toBeVisible();
+
+  const inlineBox = await inlineDiagram.boundingBox();
+  expect(inlineBox).not.toBeNull();
+
+  await page.getByRole("button", { name: "Mermaid diagram" }).click();
+
+  const fullscreen = page.getByRole("dialog", { name: "Fullscreen Mermaid diagram" });
+  await expect(fullscreen).toBeVisible();
+  const fullscreenDiagram = fullscreen.locator("svg");
+  await expect(fullscreenDiagram).toBeVisible();
+
+  const fullscreenBox = await fullscreenDiagram.boundingBox();
+  expect(fullscreenBox).not.toBeNull();
+  expect(Math.max(fullscreenBox!.width, fullscreenBox!.height)).toBeGreaterThan(
+    Math.max(inlineBox!.width, inlineBox!.height)
+  );
+  await expectNoViewportOverflow(page, ["mermaid-fullscreen__viewport"]);
+
+  await page.keyboard.press("+");
+  const zoomedBox = await fullscreenDiagram.boundingBox();
+  expect(zoomedBox).not.toBeNull();
+  expect(Math.max(zoomedBox!.width, zoomedBox!.height)).toBeGreaterThan(
+    Math.max(fullscreenBox!.width, fullscreenBox!.height)
+  );
+
+  const viewport = fullscreen.locator(".mermaid-fullscreen__viewport");
+  await expect(viewport).toHaveCSS("scrollbar-width", "none");
+
+  await viewport.evaluate((viewport) => {
+    viewport.scrollLeft = 0;
+    viewport.scrollTop = 0;
+    const rect = viewport.getBoundingClientRect();
+
+    viewport.dispatchEvent(
+      new WheelEvent("wheel", {
+        bubbles: true,
+        cancelable: true,
+        clientX: rect.left + rect.width * 0.75,
+        clientY: rect.top + rect.height * 0.75,
+        ctrlKey: true,
+        deltaY: -120
+      })
+    );
+  });
+
+  await expect.poll(() => viewport.evaluate((viewport) => viewport.scrollLeft + viewport.scrollTop)).toBeGreaterThan(0);
+
+  const wheelZoomed = await viewport.evaluate((viewport) => {
+    return {
+      scrollLeft: viewport.scrollLeft,
+      scrollTop: viewport.scrollTop
+    };
+  });
+
+  expect(wheelZoomed.scrollLeft + wheelZoomed.scrollTop).toBeGreaterThan(0);
+
+  const viewportBox = await viewport.boundingBox();
+  expect(viewportBox).not.toBeNull();
+
+  await page.mouse.move(viewportBox!.x + viewportBox!.width / 2, viewportBox!.y + viewportBox!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(viewportBox!.x + viewportBox!.width / 2 - 96, viewportBox!.y + viewportBox!.height / 2 - 64);
+  await page.mouse.up();
+
+  const scrolled = await viewport.evaluate((viewport) => {
+    return {
+      canScroll: viewport.scrollWidth > viewport.clientWidth || viewport.scrollHeight > viewport.clientHeight,
+      scrollLeft: viewport.scrollLeft,
+      scrollTop: viewport.scrollTop
+    };
+  });
+
+  expect(scrolled.canScroll).toBe(true);
+  expect(scrolled.scrollLeft + scrolled.scrollTop).toBeGreaterThan(0);
+
+  await fullscreen.click({ position: { x: 4, y: 4 } });
+  await expect(fullscreen).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Mermaid diagram" }).click();
+  await expect(fullscreen).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(fullscreen).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Mermaid diagram" }).click();
+  await expect(fullscreen).toBeVisible();
+  await page.keyboard.press("ArrowRight");
+  await expect(fullscreen).toHaveCount(0);
+  await expect(page).toHaveURL(/\/lectures\/demo-lecture\/6$/);
+
+  await page.keyboard.press("ArrowRight");
+  await expect(page).toHaveURL(/\/lectures\/demo-lecture\/7$/);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/lectures/demo-lecture/6");
+  await page.getByRole("button", { name: "Mermaid diagram" }).click();
+  await expect(fullscreen).toBeVisible();
+  await expectNoViewportOverflow(page, ["mermaid-fullscreen__viewport"]);
 });
 
 test("all demo slides fit without scrolling on desktop and mobile", async ({ page }) => {

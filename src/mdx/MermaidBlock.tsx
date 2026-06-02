@@ -1,10 +1,39 @@
 import mermaid from "mermaid";
+import type {
+  CSSProperties,
+  KeyboardEvent as ReactKeyboardEvent,
+  MouseEvent as ReactMouseEvent,
+  PointerEvent as ReactPointerEvent,
+  WheelEvent as ReactWheelEvent
+} from "react";
 import { useEffect, useId, useRef, useState } from "react";
 
 type RenderedDiagram = {
   bindFunctions?: (element: Element) => void;
   svg: string;
 };
+
+const MIN_FULLSCREEN_ZOOM = 0.75;
+const MAX_FULLSCREEN_ZOOM = 4;
+const FULLSCREEN_KEYBOARD_ZOOM_STEP = 0.12;
+const FULLSCREEN_WHEEL_ZOOM_SENSITIVITY = 0.001;
+
+type PanState = {
+  pointerId: number;
+  startX: number;
+  startY: number;
+  scrollLeft: number;
+  scrollTop: number;
+};
+
+type ZoomAnchor = {
+  clientX: number;
+  clientY: number;
+};
+
+function clampZoom(value: number) {
+  return Math.min(MAX_FULLSCREEN_ZOOM, Math.max(MIN_FULLSCREEN_ZOOM, value));
+}
 
 function cssToken(name: string, fallback: string) {
   if (typeof document === "undefined") return fallback;
@@ -46,10 +75,17 @@ function observeThemeChanges(onChange: () => void) {
 
 export function MermaidBlock({ chart }: { chart: string }) {
   const mermaidId = `mermaid-${useId().replace(/:/g, "")}`;
+  const frameRef = useRef<HTMLElement>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const fullscreenRef = useRef<HTMLDivElement>(null);
+  const fullscreenViewportRef = useRef<HTMLDivElement>(null);
+  const fullscreenZoomRef = useRef(1);
+  const panStateRef = useRef<PanState | null>(null);
   const [diagram, setDiagram] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [themeVersion, setThemeVersion] = useState(0);
+  const [fullscreenZoom, setFullscreenZoom] = useState(1);
 
   useEffect(() => {
     return observeThemeChanges(() => setThemeVersion((version) => version + 1));
@@ -89,10 +125,179 @@ export function MermaidBlock({ chart }: { chart: string }) {
     diagram.bindFunctions(ref.current);
   }, [diagram]);
 
+  useEffect(() => {
+    if (!diagram?.bindFunctions || !fullscreenRef.current || !isFullscreen) return;
+
+    diagram.bindFunctions(fullscreenRef.current);
+  }, [diagram, isFullscreen]);
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "+" || event.key === "=") {
+        event.preventDefault();
+        applyFullscreenZoom(fullscreenZoomRef.current + FULLSCREEN_KEYBOARD_ZOOM_STEP);
+        return;
+      }
+
+      if (event.key === "-" || event.key === "_") {
+        event.preventDefault();
+        applyFullscreenZoom(fullscreenZoomRef.current - FULLSCREEN_KEYBOARD_ZOOM_STEP);
+        return;
+      }
+
+      if (event.key === "0") {
+        event.preventDefault();
+        applyFullscreenZoom(1);
+        return;
+      }
+
+      if (event.key !== "Escape" && event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setIsFullscreen(false);
+      window.requestAnimationFrame(() => frameRef.current?.focus());
+    }
+
+    window.addEventListener("keydown", handleKeyDown, { capture: true });
+    fullscreenRef.current?.focus();
+
+    return () => window.removeEventListener("keydown", handleKeyDown, { capture: true });
+  }, [isFullscreen]);
+
+  const canOpenFullscreen = Boolean(diagram && !error);
+
+  function openFullscreen() {
+    if (canOpenFullscreen) {
+      fullscreenZoomRef.current = 1;
+      setFullscreenZoom(1);
+      setIsFullscreen(true);
+    }
+  }
+
+  function handleInlineKeyDown(event: ReactKeyboardEvent<HTMLElement>) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+
+    event.preventDefault();
+    openFullscreen();
+  }
+
+  function closeFullscreen(event?: ReactMouseEvent<HTMLElement>) {
+    event?.stopPropagation();
+    setIsFullscreen(false);
+    window.requestAnimationFrame(() => frameRef.current?.focus());
+  }
+
+  function handleFullscreenWheel(event: ReactWheelEvent<HTMLDivElement>) {
+    if (!event.ctrlKey && !event.metaKey) return;
+
+    event.preventDefault();
+    applyFullscreenZoom(fullscreenZoomRef.current * Math.exp(-event.deltaY * FULLSCREEN_WHEEL_ZOOM_SENSITIVITY), {
+      clientX: event.clientX,
+      clientY: event.clientY
+    });
+  }
+
+  function applyFullscreenZoom(nextZoom: number, anchor?: ZoomAnchor) {
+    const viewport = fullscreenViewportRef.current;
+    const previousZoom = fullscreenZoomRef.current;
+    const zoom = clampZoom(nextZoom);
+
+    if (zoom === previousZoom) return;
+
+    const viewportRect = viewport?.getBoundingClientRect();
+    const anchorX =
+      viewport && viewportRect ? (anchor?.clientX ?? viewportRect.left + viewport.clientWidth / 2) - viewportRect.left : 0;
+    const anchorY =
+      viewport && viewportRect ? (anchor?.clientY ?? viewportRect.top + viewport.clientHeight / 2) - viewportRect.top : 0;
+    const contentX = viewport ? (viewport.scrollLeft + anchorX) / previousZoom : 0;
+    const contentY = viewport ? (viewport.scrollTop + anchorY) / previousZoom : 0;
+
+    fullscreenZoomRef.current = zoom;
+    setFullscreenZoom(zoom);
+
+    if (!viewport) return;
+
+    window.requestAnimationFrame(() => {
+      viewport.scrollLeft = contentX * zoom - anchorX;
+      viewport.scrollTop = contentY * zoom - anchorY;
+    });
+  }
+
+  function handleFullscreenPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.button !== 0 || !fullscreenViewportRef.current) return;
+
+    event.preventDefault();
+    panStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      scrollLeft: fullscreenViewportRef.current.scrollLeft,
+      scrollTop: fullscreenViewportRef.current.scrollTop
+    };
+    fullscreenViewportRef.current.setPointerCapture(event.pointerId);
+    fullscreenViewportRef.current.classList.add("mermaid-fullscreen__viewport--panning");
+  }
+
+  function handleFullscreenPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const panState = panStateRef.current;
+    const viewport = fullscreenViewportRef.current;
+    if (!panState || !viewport || panState.pointerId !== event.pointerId) return;
+
+    event.preventDefault();
+    viewport.scrollLeft = panState.scrollLeft - (event.clientX - panState.startX);
+    viewport.scrollTop = panState.scrollTop - (event.clientY - panState.startY);
+  }
+
+  function stopFullscreenPanning(event: ReactPointerEvent<HTMLDivElement>) {
+    if (panStateRef.current?.pointerId !== event.pointerId) return;
+
+    panStateRef.current = null;
+    fullscreenViewportRef.current?.classList.remove("mermaid-fullscreen__viewport--panning");
+  }
+
   return (
-    <figure className="mermaid-frame" aria-label="Mermaid diagram">
+    <figure
+      className={`mermaid-frame${canOpenFullscreen ? " mermaid-frame--interactive" : ""}`}
+      aria-label="Mermaid diagram"
+      onClick={openFullscreen}
+      onKeyDown={handleInlineKeyDown}
+      ref={frameRef}
+      role={canOpenFullscreen && !isFullscreen ? "button" : undefined}
+      tabIndex={canOpenFullscreen && !isFullscreen ? 0 : undefined}
+    >
       <div className="mermaid" ref={ref} dangerouslySetInnerHTML={{ __html: diagram?.svg ?? "" }} />
       {error ? <figcaption className="mermaid-error">{error}</figcaption> : null}
+      {isFullscreen ? (
+        <div
+          className="mermaid-fullscreen"
+          role="dialog"
+          aria-label="Fullscreen Mermaid diagram"
+          aria-modal="true"
+          onClick={closeFullscreen}
+          ref={fullscreenRef}
+          tabIndex={-1}
+        >
+          <div
+            className="mermaid-fullscreen__viewport"
+            onClick={(event) => event.stopPropagation()}
+            onPointerCancel={stopFullscreenPanning}
+            onPointerDown={handleFullscreenPointerDown}
+            onPointerMove={handleFullscreenPointerMove}
+            onPointerUp={stopFullscreenPanning}
+            onWheel={handleFullscreenWheel}
+            ref={fullscreenViewportRef}
+          >
+            <div
+              className="mermaid-fullscreen__diagram"
+              dangerouslySetInnerHTML={{ __html: diagram?.svg ?? "" }}
+              style={{ "--mermaid-zoom": fullscreenZoom } as CSSProperties}
+            />
+          </div>
+        </div>
+      ) : null}
     </figure>
   );
 }

@@ -36,11 +36,9 @@ export function SlideFrame({ children, lecture, onToggleTheme, slide, theme }: S
         <span aria-hidden="true">{theme === "light" ? "☾" : "☼"}</span>
       </button>
       <aside className="slide-title-rail" aria-label="Slide title">
-        {slide.frontmatter.subtitle ? (
-          <p className="slide-title-rail__subtitle">
-            <InlineFrontmatterText value={slide.frontmatter.subtitle} />
-          </p>
-        ) : null}
+        <p className="slide-title-rail__subtitle">
+          <InlineFrontmatterText value={slide.frontmatter.subtitle || "\u00A0"} />
+        </p>
         <h1 className="slide-title-rail__title">
           <InlineFrontmatterText value={slide.frontmatter.title} />
         </h1>

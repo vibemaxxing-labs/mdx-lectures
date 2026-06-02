@@ -174,11 +174,12 @@ kbd {
   margin: 0;
   color: var(--color-text-muted);
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   line-height: 1;
   text-transform: uppercase;
+  opacity: .5;
 }
 
 .slide-title-rail__title {
@@ -664,6 +665,23 @@ kbd {
   background: color-mix(in srgb, var(--color-surface-soft) 64%, transparent);
 }
 
+.mermaid-frame--interactive {
+  cursor: zoom-in;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.mermaid-frame--interactive:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 65%, var(--color-rule));
+  background: color-mix(in srgb, var(--color-surface-soft) 82%, transparent);
+}
+
+.mermaid-frame--interactive:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 0.35rem;
+}
+
 .mermaid {
   width: 100%;
 }
@@ -677,6 +695,57 @@ kbd {
   color: #a05a4c;
   font-family: var(--font-mono);
   font-size: var(--type-caption);
+}
+
+.mermaid-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  width: 100vw;
+  height: 100dvh;
+  place-items: center;
+  padding: var(--space-5);
+  background: color-mix(in srgb, var(--color-bg) 94%, var(--color-surface));
+  cursor: zoom-out;
+}
+
+.mermaid-fullscreen:focus {
+  outline: none;
+}
+
+.mermaid-fullscreen__viewport {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  cursor: grab;
+  scrollbar-width: none;
+  touch-action: none;
+}
+
+.mermaid-fullscreen__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.mermaid-fullscreen__viewport--panning {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.mermaid-fullscreen__diagram {
+  display: grid;
+  width: max(100%, calc(100% * var(--mermaid-zoom)));
+  min-height: max(100%, calc(100% * var(--mermaid-zoom)));
+  place-items: center;
+  padding: var(--space-4);
+}
+
+.mermaid-fullscreen__diagram svg {
+  width: 100% !important;
+  height: auto;
+  max-width: none !important;
+  max-height: none !important;
 }
 
 @media (max-width: 720px) {
@@ -774,5 +843,9 @@ kbd {
   .mermaid-frame {
     min-height: 12rem;
     padding: var(--space-1);
+  }
+
+  .mermaid-fullscreen {
+    padding: var(--space-3);
   }
 }
