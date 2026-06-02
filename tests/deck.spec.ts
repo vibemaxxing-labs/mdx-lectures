@@ -204,11 +204,11 @@ test("mermaid diagram colors follow theme switches", async ({ page }) => {
     return page.locator(".mermaid svg .node rect").first().evaluate((node) => getComputedStyle(node).fill);
   }
 
-  await expect.poll(mermaidNodeFill).toBe("rgb(234, 228, 216)");
+  await expect.poll(mermaidNodeFill).toBe("rgb(243, 238, 230)");
 
   await page.getByRole("button", { name: "Switch to dark theme" }).click();
 
-  await expect.poll(mermaidNodeFill).toBe("rgb(36, 33, 29)");
+  await expect.poll(mermaidNodeFill).toBe("rgb(40, 37, 31)");
   await expectNoViewportOverflow(page);
 });
 

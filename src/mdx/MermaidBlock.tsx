@@ -49,12 +49,26 @@ function configureMermaid() {
     theme: "base",
     themeVariables: {
       background: cssToken("--color-bg", "#F7F4EF"),
-      primaryColor: cssToken("--color-surface", "#EAE4D8"),
+      primaryColor: cssToken("--mermaid-node-bg", "#F3EEE6"),
       primaryTextColor: cssToken("--color-text", "#1F1E1B"),
-      primaryBorderColor: cssToken("--color-rule", "#D7D0C5"),
-      lineColor: cssToken("--color-accent", "#7E8A92"),
-      secondaryColor: cssToken("--color-surface-soft", "#F2EEE7"),
-      tertiaryColor: cssToken("--color-bg", "#F7F4EF")
+      primaryBorderColor: cssToken("--mermaid-node-border", "#C8BEB0"),
+      lineColor: cssToken("--mermaid-line", "#8D9699"),
+      secondaryColor: cssToken("--mermaid-node-bg-alt", "#E8EDE8"),
+      secondaryTextColor: cssToken("--color-text", "#1F1E1B"),
+      secondaryBorderColor: cssToken("--mermaid-node-border", "#C8BEB0"),
+      tertiaryColor: cssToken("--mermaid-node-bg-soft", "#ECEFF0"),
+      tertiaryTextColor: cssToken("--color-text", "#1F1E1B"),
+      tertiaryBorderColor: cssToken("--mermaid-node-border", "#C8BEB0"),
+      mainBkg: cssToken("--mermaid-node-bg", "#F3EEE6"),
+      nodeBorder: cssToken("--mermaid-node-border", "#C8BEB0"),
+      nodeTextColor: cssToken("--color-text", "#1F1E1B"),
+      edgeLabelBackground: cssToken("--mermaid-label-bg", "#F7F4EF"),
+      clusterBkg: cssToken("--mermaid-cluster-bg", "#EEE8DD"),
+      clusterBorder: cssToken("--mermaid-node-border", "#C8BEB0"),
+      titleColor: cssToken("--color-text", "#1F1E1B"),
+      textColor: cssToken("--color-text", "#1F1E1B"),
+      fontFamily: cssToken("--font-sans", "PT Sans, ui-sans-serif, system-ui, sans-serif"),
+      fontSize: "13px"
     }
   });
 }

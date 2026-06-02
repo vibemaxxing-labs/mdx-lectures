@@ -10,6 +10,13 @@
   --color-rule: #d7d0c5;
   --color-accent: #7e8a92;
   --color-shadow: rgb(31 30 27 / 0.14);
+  --mermaid-node-bg: #f3eee6;
+  --mermaid-node-bg-alt: #e8ede8;
+  --mermaid-node-bg-soft: #eceff0;
+  --mermaid-node-border: #c8beb0;
+  --mermaid-line: #8d9699;
+  --mermaid-label-bg: #f7f4ef;
+  --mermaid-cluster-bg: #eee8dd;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +31,13 @@
     --color-rule: #3a3732;
     --color-accent: #98a4a8;
     --color-shadow: rgb(23 22 19 / 0.45);
+    --mermaid-node-bg: #28251f;
+    --mermaid-node-bg-alt: #263029;
+    --mermaid-node-bg-soft: #252b2d;
+    --mermaid-node-border: #47423a;
+    --mermaid-line: #9ba3a5;
+    --mermaid-label-bg: #171613;
+    --mermaid-cluster-bg: #201e1a;
   }
 }
 
@@ -38,6 +52,13 @@
   --color-rule: #3a3732;
   --color-accent: #98a4a8;
   --color-shadow: rgb(23 22 19 / 0.45);
+  --mermaid-node-bg: #28251f;
+  --mermaid-node-bg-alt: #263029;
+  --mermaid-node-bg-soft: #252b2d;
+  --mermaid-node-border: #47423a;
+  --mermaid-line: #9ba3a5;
+  --mermaid-label-bg: #171613;
+  --mermaid-cluster-bg: #201e1a;
 }
 
 :root {
@@ -191,6 +212,7 @@ kbd {
   font-weight: 400;
   letter-spacing: 0.1em;
   line-height: 0.95;
+  opacity: .75;
 }
 
 .slide-title-rail__title b,
@@ -660,21 +682,23 @@ kbd {
   min-height: 16rem;
   place-items: center;
   gap: var(--space-1);
-  padding: var(--space-2);
-  border: 1px dashed var(--color-rule);
-  background: color-mix(in srgb, var(--color-surface-soft) 64%, transparent);
+  padding: var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--color-rule) 72%, transparent);
+  background: color-mix(in srgb, var(--color-surface-soft) 56%, transparent);
 }
 
 .mermaid-frame--interactive {
   cursor: zoom-in;
   transition:
     border-color 160ms ease,
-    background-color 160ms ease;
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .mermaid-frame--interactive:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 65%, var(--color-rule));
-  background: color-mix(in srgb, var(--color-surface-soft) 82%, transparent);
+  border-color: color-mix(in srgb, var(--color-accent) 48%, var(--color-rule));
+  background: color-mix(in srgb, var(--color-surface-soft) 72%, transparent);
+  box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--color-shadow) 38%, transparent);
 }
 
 .mermaid-frame--interactive:focus-visible {
@@ -686,9 +710,75 @@ kbd {
   width: 100%;
 }
 
-.mermaid svg {
+.mermaid svg,
+.mermaid-fullscreen__diagram svg {
   max-width: 100%;
   max-height: 46dvh;
+  overflow: visible;
+  font-family: var(--font-sans) !important;
+  font-size: var(--type-caption) !important;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+.mermaid svg .node rect,
+.mermaid svg .node circle,
+.mermaid svg .node ellipse,
+.mermaid svg .node polygon,
+.mermaid svg .node path,
+.mermaid-fullscreen__diagram svg .node rect,
+.mermaid-fullscreen__diagram svg .node circle,
+.mermaid-fullscreen__diagram svg .node ellipse,
+.mermaid-fullscreen__diagram svg .node polygon,
+.mermaid-fullscreen__diagram svg .node path {
+  stroke-width: 1.1px !important;
+}
+
+.mermaid svg .edgePath path,
+.mermaid svg .flowchart-link,
+.mermaid-fullscreen__diagram svg .edgePath path,
+.mermaid-fullscreen__diagram svg .flowchart-link {
+  stroke-width: 1.35px !important;
+}
+
+.mermaid svg marker path,
+.mermaid svg .arrowMarkerPath,
+.mermaid-fullscreen__diagram svg marker path,
+.mermaid-fullscreen__diagram svg .arrowMarkerPath {
+  fill: var(--mermaid-line) !important;
+  stroke: var(--mermaid-line) !important;
+}
+
+.mermaid svg .edgeLabel,
+.mermaid svg .edgeLabel p,
+.mermaid-fullscreen__diagram svg .edgeLabel,
+.mermaid-fullscreen__diagram svg .edgeLabel p {
+  color: var(--color-text-muted) !important;
+  background-color: var(--mermaid-label-bg) !important;
+}
+
+.mermaid svg text,
+.mermaid svg .label,
+.mermaid svg .label span,
+.mermaid svg foreignObject,
+.mermaid svg foreignObject *,
+.mermaid-fullscreen__diagram svg text,
+.mermaid-fullscreen__diagram svg .label,
+.mermaid-fullscreen__diagram svg .label span,
+.mermaid-fullscreen__diagram svg foreignObject,
+.mermaid-fullscreen__diagram svg foreignObject * {
+  color: var(--color-text) !important;
+  font-family: var(--font-sans) !important;
+  font-size: inherit !important;
+  font-weight: 400 !important;
+  line-height: inherit !important;
+  letter-spacing: 0;
+}
+
+.mermaid svg .cluster rect,
+.mermaid-fullscreen__diagram svg .cluster rect {
+  rx: 4px;
+  ry: 4px;
 }
 
 .mermaid-error {
