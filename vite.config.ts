@@ -45,6 +45,7 @@ function remarkMermaidBlocks() {
 }
 
 const config: UserConfig & { test: InlineConfig } = {
+  base: process.env.CI ? "/mdx-lectures/" : "/",
   plugins: [
     mdx({
       providerImportSource: "@mdx-js/react",
