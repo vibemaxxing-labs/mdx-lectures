@@ -13,14 +13,25 @@ export type LectureRoute =
       kind: "not-found";
     };
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const lectureRoutePattern = /^\/lectures\/([^/]+)\/(\d+)\/?$/;
 
+function stripBase(pathname: string): string {
+  if (base && pathname.startsWith(base)) {
+    return pathname.slice(base.length) || "/";
+  }
+  return pathname;
+}
+
 export function parseRoute(pathname: string): LectureRoute {
-  if (pathname === "/" || pathname === "") {
+  const path = stripBase(pathname);
+
+  if (path === "/" || path === "") {
     return { kind: "root" };
   }
 
-  const match = lectureRoutePattern.exec(pathname);
+  const match = lectureRoutePattern.exec(path);
   if (!match) {
     return { kind: "not-found" };
   }
@@ -33,7 +44,7 @@ export function parseRoute(pathname: string): LectureRoute {
 }
 
 export function slidePath(lectureSlug: string, slideNumber: number) {
-  return `/lectures/${encodeURIComponent(lectureSlug)}/${slideNumber}`;
+  return `${base}/lectures/${encodeURIComponent(lectureSlug)}/${slideNumber}`;
 }
 
 export function resolveInitialRoute(pathname: string, lectures: LectureMap) {
