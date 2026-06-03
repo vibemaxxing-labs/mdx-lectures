@@ -1,0 +1,46 @@
+---
+title: <i><b>Core</b></i> функціонал системи
+subtitle: "*** ** *"
+---
+
+### auth
+
+```mermaid
+flowchart LR
+  User[User]
+  Frontend[Frontend]
+  Backend[Backend API]
+  DB[(Users DB)]
+
+  subgraph AuthTypes[Auth types]
+    Password[email + password]
+    Magic[otp / magic-link]
+    OAuth[OAuth / OIDC]
+    ApiKey[API key]
+  end
+
+  Provider[Google / X / FB / ...]
+
+  User --> Frontend
+  Frontend -->|login request| Backend
+  Backend --> Password
+  Backend --> Magic
+  Backend --> OAuth
+  Backend --> ApiKey
+
+  Password -->|hash check| DB
+  Magic -->|token check| DB
+  OAuth -->|redirect + code| Provider
+  Provider -->|verified profile| Backend
+  ApiKey -->|key lookup| DB
+
+  Backend -->|session / JWT / scoped access| Frontend
+  Frontend -->|authenticated requests| Backend
+```
+
+|  |  |
+| --- | --- |
+| логіниться юзер, потрібно швидко | email + password |
+| логіниться юзер, потрібно зручно | OAuth / OIDC |
+| не хочемо зберігати паролі | magic link / OTP |
+| інший сервіс викликає наш backend | API key або client credentials |
