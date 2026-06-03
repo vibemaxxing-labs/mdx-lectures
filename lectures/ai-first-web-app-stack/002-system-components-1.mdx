@@ -3,16 +3,20 @@ title: <i><b>Core</b></i> компоненти системи
 subtitle: "*** ** *"
 ---
 
-### з чого складається типова web-app система?
+### як працює типова web-app система?
 
 ```mermaid
-architecture-beta
-  service user(internet)[User]
-  service frontend(server)[Frontend]
-  service backend(server)[Backend]
-  service database(database)[Database]
+sequenceDiagram
+  autonumber
+  actor User
+  participant Frontend
+  participant Backend
+  participant Database
 
-  user:R <--> L:frontend
-  frontend:R <--> L:backend
-  backend:R <--> L:database
+  User->>Frontend: action
+  Frontend->>Backend: request
+  Backend->>Database: query
+  Database-->>Backend: data
+  Backend-->>Frontend: response
+  Frontend-->>User: render
 ```
