@@ -6,10 +6,13 @@ subtitle: "*** ** *"
 ### з чого складається типова web-app система?
 
 ```mermaid
-flowchart LR
-  User --> Frontend
-  Frontend -->|request| Backend
-  Backend -->|query| Database
-  Database --> |data| Backend
-  Backend -->|response| Frontend
+architecture-beta
+  service user(internet)[User]
+  service frontend(server)[Frontend]
+  service backend(server)[Backend]
+  service database(database)[Database]
+
+  user:R <--> L:frontend
+  frontend:R <--> L:backend
+  backend:R <--> L:database
 ```
