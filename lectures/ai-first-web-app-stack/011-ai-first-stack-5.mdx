@@ -1,0 +1,46 @@
+---
+title: <b>Web-app</b> stack
+subtitle: "*** ** *"
+---
+
+## > backend без backend
+
+```mermaid
+flowchart LR
+  subgraph Classic[Classic backend]
+    direction LR
+    Users[User requests]
+    Server[Your server<br/>ON 24/7]
+    Code[Backend app<br/>always loaded]
+    Wait[Waiting for requests...]
+
+    Users --> Server
+    Server --> Code
+    Code --> Wait
+  end
+
+  subgraph Serverless[Serverless: AWS Lambda]
+    direction LR
+    Request[User request]
+    AWS[AWS]
+    Start[Start function]
+    Lambda[AWS Lambda<br/>run your code]
+    Stop[Stop function]
+
+    Request --> AWS
+    AWS --> Start
+    Start --> Lambda
+    Lambda --> Stop
+  end
+
+  Wait ~~~ Request
+```
+
+|  |  |
+| --- | --- |
+| classic backend | один сервер увімкнений постійно, навіть коли запитів нема (pay-for-time) |
+| serverless | запускається процес під запит і потім тушиться (pay-for-call) |
+
+serverless добре підходить для маленьких API, webhooks, integrations і задач, які запускаються не постійно (Stripe webhook, contact form email, image resize).
+
+### Serverless Saas: [AWS Lambda](https://aws.amazon.com/lambda/), [Supabase Edge Functions](https://supabase.com/docs/guides/functions), [Firebase Cloud Functions](https://firebase.google.com/products/functions), [Vercel Functions](https://vercel.com/docs/functions)

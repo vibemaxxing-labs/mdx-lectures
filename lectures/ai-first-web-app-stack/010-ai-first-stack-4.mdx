@@ -1,0 +1,34 @@
+---
+title: <b>Web-app</b> stack
+subtitle: "*** ** *"
+---
+
+## > backend / base
+
+### lang: <strong>NodeJS</strong>
+### framework: <strong>[ExpressJS](https://expressjs.com/)/[NestJS](https://nestjs.com/)</strong>
+
+```mermaid
+flowchart LR
+  Frontend[Browser / Frontend]
+  Backend[Backend API]
+  Router[Routing / endpoint handling]
+  Auth[Auth + access rules]
+  Logic[Business logic]
+  DB[(Database)]
+  Integrations[Third-party APIs]
+  Jobs[Background jobs]
+
+  Frontend -->|request| Backend
+  Backend --> Router
+  Router -->|GET / POST / PUT / DELETE| Auth
+  Auth --> Logic
+  Logic --> DB
+  Logic --> Integrations
+  Logic --> Jobs
+  Backend -->|response| Frontend
+```
+
+NodeJS/ExpressJS/NestJS --> дуже сильне та розвинути комʼюніті
+
+frontend + backend на JS --> менше тертя, схожий принцип роботи коду
