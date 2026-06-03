@@ -5,18 +5,13 @@ subtitle: "*** ** *"
 
 import paywall from "./assets/paywall.png";
 
-## > paywall
+### > paywall
 
-<div style={{display: 'flex', gap: '2rem', alignItems: 'center', maxWidth: 'var(--content-wide-max-width)'}}>
-
-<Figure
-  src={paywall}
-  alt=""
-  caption=""
-  plain
-/>
-
-> Це те, без чого не заробиш.
-
-</div>
+```mermaid
+flowchart LR
+    A([👤 User]) -->|free| D([🌐 Public Area])
+    A -->|premium request| B[🔒 Paywall]
+    B -->|denied| A
+    B -->|💳 paid| C([⚙️ Premium Features])
+```
 
