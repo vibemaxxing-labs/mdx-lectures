@@ -1,0 +1,29 @@
+---
+title: <b>Web-app</b> stack
+subtitle: "*** ** *"
+---
+
+## > database / saas потрібен не завжди
+
+### ---> [sqlite](https://sqlite.org/) \<---
+
+```mermaid
+flowchart LR
+  subgraph FileSystem[Same FileSystem]
+    direction LR
+
+    Service[Service]
+    SQLite[(SQLite)]
+
+    Service -->|query| SQLite
+    SQLite -->|data| Service
+  end
+```
+
+<Callout variant="principle" title="Правило вибору">
+    - один процес + один юзер + локально → SQLite
+
+    - нетворк + параллельний запис + масштаб + висока доступність → PostgreSQL / MySQL
+
+    - втрата даних критична? → іди в SaaS
+</Callout>
