@@ -1,0 +1,19 @@
+---
+title: Типові <i><b>топології</b></i>
+subtitle: "*** ** *"
+---
+
+### fe + be
+
+```mermaid
+architecture-beta
+  group client(internet)[Client]
+  group app(cloud)[App platform]
+
+  service browser(internet)[Browser] in client
+  service frontend(server)[Frontend] in app
+  service backend(server)[Backend API] in app
+
+  browser:R --> L:frontend
+  frontend:R --> L:backend
+```
