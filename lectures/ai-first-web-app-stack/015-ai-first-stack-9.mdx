@@ -3,7 +3,7 @@ title: <b>Web-app</b> stack
 subtitle: "*** ** *"
 ---
 
-## > database / saas потрібен не завжди
+## > database / не ускладнюй
 
 ### ---> [sqlite](https://sqlite.org/) \<---
 
@@ -21,9 +21,9 @@ flowchart LR
 ```
 
 <Callout variant="principle" title="Правило вибору">
-    - один процес + один юзер + локально → SQLite
+    - один процес / один юзер / локально → SQLite
 
-    - нетворк + параллельний запис + масштаб + висока доступність → PostgreSQL / MySQL
+    - нетворк / параллельний запис / масштаб / висока доступність → PostgreSQL / MySQL
 
-    - втрата даних критична? → іди в SaaS
+    - втрата даних критична → іди в SaaS
 </Callout>
