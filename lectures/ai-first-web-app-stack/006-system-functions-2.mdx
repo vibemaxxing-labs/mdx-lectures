@@ -3,17 +3,33 @@ title: <i><b>Core</b></i> функціонал системи
 subtitle: "*** ** *"
 ---
 
-import paywall from "./assets/paywall.png";
-
-### > paywall
+### > auth / saas in depth
 
 ```mermaid
-flowchart LR
-    A([👤 User]) -->|free| D([🌐 Public Area])
-    A -->|premium request| B[🔒 Paywall]
-    B -->|denied| A
-    B -->|💳 paid| C([⚙️ Premium Features])
+sequenceDiagram
+    autonumber
+
+    actor User as User
+    participant App as Your App<br/>Frontend
+    participant Auth as Auth SaaS<br/>Clerk/Auth0/Kinde/etc
+    participant API as Your Backend API
+    participant DB as Database
+
+    User->>App: Open app
+    App->>Auth: Redirect to login / open auth widget
+
+    User->>Auth: Login<br/>email/password, OAuth, magic link
+    Auth->>Auth: Verify identity
+
+    Auth-->>App: Return session / JWT / cookie
+
+    App->>API: Request protected resource<br/>with token/session
+    API->>Auth: Validate token / fetch user info
+    Auth-->>API: User identity + claims<br/>user_id, email, role, org_id
+
+    API->>DB: Query data for user_id / org_id
+    DB-->>API: Return allowed data
+
+    API-->>App: Response
+    App-->>User: Show protected content
 ```
-### Global: [Stripe](https://stripe.com/), [LemonSqueezy](https://www.lemonsqueezy.com/), [Paddle](https://www.paddle.com/) 
-### Ukraine: [LiqPay](https://www.liqpay.ua), [WayForPay](https://wayforpay.com)
-### Crypto: [NOWPayments](https://nowpayments.io/), [CoinGate](https://coingate.com/), [Coinbase Business](https://www.coinbase.com/business), [Self Hosted BTCPayServer](https://btcpayserver.org/)

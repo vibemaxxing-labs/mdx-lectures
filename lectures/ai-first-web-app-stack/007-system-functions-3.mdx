@@ -1,0 +1,32 @@
+---
+title: <i><b>Core</b></i> функціонал системи
+subtitle: "*** ** *"
+---
+
+import paywall from "./assets/paywall.png";
+
+### > paywall
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant Backend
+    participant Billing
+
+    User->>App: Open premium content / feature
+    App->>Backend: Check access status
+    Backend-->>App: Access denied
+
+    App-->>User: Show paywall
+    User->>App: Select plan and continue
+    App->>Billing: Start payment
+    Billing-->>App: Payment success
+
+    App->>Backend: Update subscription / entitlement
+    Backend-->>App: Access granted
+    App-->>User: Unlock content / feature
+```
+### Global: [Stripe](https://stripe.com/), [LemonSqueezy](https://www.lemonsqueezy.com/), [Paddle](https://www.paddle.com/) 
+### Ukraine: [LiqPay](https://www.liqpay.ua), [WayForPay](https://wayforpay.com)
+### Crypto: [NOWPayments](https://nowpayments.io/), [CoinGate](https://coingate.com/), [Coinbase Business](https://www.coinbase.com/business), [Self Hosted BTCPayServer](https://btcpayserver.org/)
