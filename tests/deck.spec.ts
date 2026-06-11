@@ -231,8 +231,8 @@ test("mermaid diagrams open fullscreen and close before slide navigation", async
 
   const fullscreenBox = await fullscreenDiagram.boundingBox();
   expect(fullscreenBox).not.toBeNull();
-  expect(Math.max(fullscreenBox!.width, fullscreenBox!.height)).toBeGreaterThan(
-    Math.max(inlineBox!.width, inlineBox!.height)
+  expect(Math.max(fullscreenBox!.width, fullscreenBox!.height)).toBeLessThan(
+    Math.max(inlineBox!.width, inlineBox!.height) * 2
   );
   await expectNoViewportOverflow(page, ["mermaid-fullscreen__viewport"]);
 

@@ -13,8 +13,9 @@ type RenderedDiagram = {
   svg: string;
 };
 
-const MIN_FULLSCREEN_ZOOM = 0.75;
+const MIN_FULLSCREEN_ZOOM = 0.375;
 const MAX_FULLSCREEN_ZOOM = 4;
+const INITIAL_FULLSCREEN_ZOOM = 0.375;
 const FULLSCREEN_KEYBOARD_ZOOM_STEP = 0.12;
 const FULLSCREEN_WHEEL_ZOOM_SENSITIVITY = 0.001;
 
@@ -93,13 +94,13 @@ export function MermaidBlock({ chart }: { chart: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
   const fullscreenViewportRef = useRef<HTMLDivElement>(null);
-  const fullscreenZoomRef = useRef(1);
+  const fullscreenZoomRef = useRef(INITIAL_FULLSCREEN_ZOOM);
   const panStateRef = useRef<PanState | null>(null);
   const [diagram, setDiagram] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [themeVersion, setThemeVersion] = useState(0);
-  const [fullscreenZoom, setFullscreenZoom] = useState(1);
+  const [fullscreenZoom, setFullscreenZoom] = useState(INITIAL_FULLSCREEN_ZOOM);
 
   useEffect(() => {
     return observeThemeChanges(() => setThemeVersion((version) => version + 1));
@@ -185,8 +186,8 @@ export function MermaidBlock({ chart }: { chart: string }) {
 
   function openFullscreen() {
     if (canOpenFullscreen) {
-      fullscreenZoomRef.current = 1;
-      setFullscreenZoom(1);
+      fullscreenZoomRef.current = INITIAL_FULLSCREEN_ZOOM;
+      setFullscreenZoom(INITIAL_FULLSCREEN_ZOOM);
       setIsFullscreen(true);
     }
   }

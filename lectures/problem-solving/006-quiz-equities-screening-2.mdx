@@ -1,0 +1,20 @@
+---
+title: Quiz
+subtitle: "*** ** *"
+---
+
+## equities screening
+
+#### контекст: API коштує грошей, 100k користувачів, один запит 0.01$
+
+<Callout variant="note" title="🚫 inefficient">
+    Дьоргати API про той самий курс на кожен запит кожного користувача
+</Callout>
+
+<Callout variant="principle" title="⭐️ golden pick">
+    Кеш у пам'яті самого сервісу на 1 хвилину
+</Callout>
+
+<Callout variant="note" title="🚫 overhead">
+    Окремий Redis-cluster з реплікацією для даних
+</Callout>
