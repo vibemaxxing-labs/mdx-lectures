@@ -1,9 +1,11 @@
 ---
-title: Practical Advice
+title: Solution Breakdown
 subtitle: "*** ** *"
 ---
 
-## tax report automation / extraction quality
+## tax report automation / better solution
+
+LLM не приймає фінальні факти. Вона лише витягує дані з документів і пояснює невпевнені місця. Якість дають frozen state, source links, детерміновані lookup-таблиці, формули, API НБУ та fail-fast валідація.
 
 ```mermaid
 flowchart TB
@@ -30,11 +32,8 @@ flowchart TB
   class review decisionFinal
 ```
 
-<Callout variant="principle" title="practical rule">
-  ### не просимо модель “прочитати документ”
+### не просимо модель “прочитати документ”
 
-  Спочатку забираємо текстовий шар кодом. Якщо це справді скан — один документ
-  за виклик vision-моделі, structured output, confidence на кожне поле, заборона
-  вгадувати. Далі точність дає не модель, а cross-check кодом і review тільки там,
-  де не зійшлося.
-</Callout>
+Один документ до віжн vision-моделі, через саб агента, structured output, confidence на кожне поле. 
+Далі точність дає не модель, а cross-check кодом і review тільки там,
+де не зійшлося.

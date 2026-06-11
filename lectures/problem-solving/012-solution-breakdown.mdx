@@ -5,38 +5,8 @@ subtitle: "*** ** *"
 
 ## tax report automation / current solution
 
-### Claude skill, одна сесія
-
-```mermaid
-flowchart TB
-  docs["Документи"]
-
-  subgraph chat["Один LLM-chat context"]
-    direction TB
-
-    inv["Orchestrator<br/>інвентаризація"]
-    parse["Парсинг документів<br/>скани, PDF, Excel"]
-    reconcile["Reconciliation<br/>ієрархія джерел текстом"]
-    account["Account matcher<br/>проводки в чаті"]
-    classify["Classifier<br/>v1: PDF vision<br/>v2: JSON lookup"]
-    rate["NBU API"]
-    excel["Excel assembler"]
-    validate["Validator<br/>16 перевірок як інструкції"]
-
-    inv --> parse --> reconcile --> account --> classify --> rate --> excel --> validate
-    validate -. "FAIL" .-> parse
-  end
-
-  output["Звіт_КО.xlsx"]
-
-  docs --> chat
-  validate --> output
-
-  lateReview["Людина бачить помилки<br/>лише наприкінці"]
-
-  validate -.-> lateReview
-
-  class chat,parse,account,validate decisionMuted
-  class classify decisionChosen
-  class output decisionFinal
-```
+1. Claude SKILL
+2. Одна сесія. pipeline виглядає як 15 агентів, але фактично це одна модель з переповненим контекстом
+3. Відсутність детермінованого стану між операціями
+4. Не вистачає code cross check
+5. Не вистачає подвійної верификації ключових документів
