@@ -772,12 +772,75 @@ kbd {
 .mermaid-fullscreen__diagram svg .label span,
 .mermaid-fullscreen__diagram svg foreignObject,
 .mermaid-fullscreen__diagram svg foreignObject * {
-  color: var(--color-text) !important;
   font-family: var(--font-sans) !important;
   font-size: inherit !important;
   font-weight: 400 !important;
   line-height: inherit !important;
   letter-spacing: 0;
+}
+
+.mermaid svg .node .label p,
+.mermaid-fullscreen__diagram svg .node .label p {
+  color: inherit;
+}
+
+.mermaid svg .node.decisionChosen rect,
+.mermaid svg .node.decisionChosen circle,
+.mermaid svg .node.decisionChosen ellipse,
+.mermaid svg .node.decisionChosen polygon,
+.mermaid svg .node.decisionChosen path,
+.mermaid-fullscreen__diagram svg .node.decisionChosen rect,
+.mermaid-fullscreen__diagram svg .node.decisionChosen circle,
+.mermaid-fullscreen__diagram svg .node.decisionChosen ellipse,
+.mermaid-fullscreen__diagram svg .node.decisionChosen polygon,
+.mermaid-fullscreen__diagram svg .node.decisionChosen path {
+  fill: var(--mermaid-node-bg-alt) !important;
+  stroke: var(--color-accent) !important;
+  stroke-width: 2px !important;
+}
+
+.mermaid svg .node.decisionMuted rect,
+.mermaid svg .node.decisionMuted circle,
+.mermaid svg .node.decisionMuted ellipse,
+.mermaid svg .node.decisionMuted polygon,
+.mermaid svg .node.decisionMuted path,
+.mermaid-fullscreen__diagram svg .node.decisionMuted rect,
+.mermaid-fullscreen__diagram svg .node.decisionMuted circle,
+.mermaid-fullscreen__diagram svg .node.decisionMuted ellipse,
+.mermaid-fullscreen__diagram svg .node.decisionMuted polygon,
+.mermaid-fullscreen__diagram svg .node.decisionMuted path {
+  fill: var(--mermaid-node-bg-soft) !important;
+  stroke: var(--mermaid-node-border) !important;
+}
+
+.mermaid svg .node.decisionFinal rect,
+.mermaid svg .node.decisionFinal circle,
+.mermaid svg .node.decisionFinal ellipse,
+.mermaid svg .node.decisionFinal polygon,
+.mermaid svg .node.decisionFinal path,
+.mermaid-fullscreen__diagram svg .node.decisionFinal rect,
+.mermaid-fullscreen__diagram svg .node.decisionFinal circle,
+.mermaid-fullscreen__diagram svg .node.decisionFinal ellipse,
+.mermaid-fullscreen__diagram svg .node.decisionFinal polygon,
+.mermaid-fullscreen__diagram svg .node.decisionFinal path {
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--color-accent) !important;
+  stroke-width: 2px !important;
+}
+
+.mermaid svg .node.decisionChosen .label,
+.mermaid svg .node.decisionChosen .label span,
+.mermaid svg .node.decisionMuted .label,
+.mermaid svg .node.decisionMuted .label span,
+.mermaid svg .node.decisionFinal .label,
+.mermaid svg .node.decisionFinal .label span,
+.mermaid-fullscreen__diagram svg .node.decisionChosen .label,
+.mermaid-fullscreen__diagram svg .node.decisionChosen .label span,
+.mermaid-fullscreen__diagram svg .node.decisionMuted .label,
+.mermaid-fullscreen__diagram svg .node.decisionMuted .label span,
+.mermaid-fullscreen__diagram svg .node.decisionFinal .label,
+.mermaid-fullscreen__diagram svg .node.decisionFinal .label span {
+  color: var(--color-text) !important;
 }
 
 .mermaid svg .cluster rect,
