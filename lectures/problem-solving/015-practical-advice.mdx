@@ -1,0 +1,40 @@
+---
+title: Practical Advice
+subtitle: "*** ** *"
+---
+
+## tax report automation / extraction quality
+
+```mermaid
+flowchart TB
+  pdf["PDF / scan"]
+  text["Text layer<br/>pdftotext / pdfplumber"]
+  vision["Vision model<br/>JSON Schema"]
+  confidence["Field confidence<br/>null if unclear"]
+  crosscheck["Code cross-check<br/>between sources"]
+  double["Double pass<br/>critical numbers"]
+  review["Human review<br/>only mismatches"]
+  state["Frozen state"]
+
+  pdf --> text
+  text -->|"є текст"| state
+  text -->|"чистий скан"| vision
+  vision --> confidence --> crosscheck --> double --> state
+  confidence -. "low" .-> review
+  crosscheck -. "diff" .-> review
+  double -. "diff" .-> review
+  review --> state
+
+  class text,crosscheck,double,state decisionChosen
+  class vision,confidence decisionMuted
+  class review decisionFinal
+```
+
+<Callout variant="principle" title="practical rule">
+  ### не просимо модель “прочитати документ”
+
+  Спочатку забираємо текстовий шар кодом. Якщо це справді скан — один документ
+  за виклик vision-моделі, structured output, confidence на кожне поле, заборона
+  вгадувати. Далі точність дає не модель, а cross-check кодом і review тільки там,
+  де не зійшлося.
+</Callout>
