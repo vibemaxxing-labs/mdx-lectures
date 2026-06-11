@@ -1,0 +1,44 @@
+---
+title: Solution Breakdown
+subtitle: "*** ** *"
+---
+
+## tax report automation / solution
+
+```mermaid
+flowchart TB
+  docs["Документи"]
+
+  subgraph chat["Один LLM-chat context"]
+    direction TB
+
+    inv["1. Orchestrator<br/>інвентаризація"]
+    parse["2-4. Парсинг документів<br/>скани, PDF, Excel"]
+    reconcile["4.5. Reconciliation<br/>ієрархія джерел текстом"]
+    account["5. Account matcher<br/>проводки в чаті"]
+    classify["6. Classifier<br/>v1: PDF vision<br/>v2: JSON lookup"]
+    rate["7. NBU API"]
+    excel["8a. Excel assembler"]
+    validate["8b. Validator<br/>16 перевірок як інструкції"]
+
+    inv --> parse --> reconcile --> account --> classify --> rate --> excel --> validate
+    validate -. "FAIL: повторити ланцюг" .-> parse
+  end
+
+  output["Звіт_КО.xlsx"]
+
+  docs --> chat
+  validate --> output
+
+  tokenLoss["Дані передруковує LLM<br/>між кожним кроком"]
+  noState["Немає frozen state<br/>і audit trail"]
+  lateReview["Людина бачить помилки<br/>лише наприкінці"]
+
+  parse -.-> tokenLoss
+  account -.-> noState
+  validate -.-> lateReview
+
+  class chat,parse,account,validate decisionMuted
+  class classify decisionChosen
+  class output decisionFinal
+```

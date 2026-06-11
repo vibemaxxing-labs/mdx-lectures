@@ -1,0 +1,35 @@
+---
+title: Solution Breakdown
+subtitle: "*** ** *"
+---
+
+## tax report automation / better solution
+
+```mermaid
+flowchart TB
+  docs["Документи<br/>ВМД, інвойси, контракт, картка рахунку"]
+
+  extract["LLM extraction<br/>витягнути факти + confidence"]
+  state["Frozen operation state<br/>1 проводка = 1 рядок"]
+  engine["Deterministic engine<br/>формули, NBU API, JSON classifiers"]
+  review["Human review queue<br/>тільки critical mismatch"]
+  excel["Excel from template<br/>рядки 6+, шапка untouched"]
+  validate["Validation gate<br/>16 deterministic checks"]
+  output["Звіт КО<br/>з audit trail"]
+
+  docs --> extract --> state --> engine --> excel --> validate --> output
+  state --> review --> state
+  validate -. "fail: точковий fix owner step" .-> state
+
+  class extract decisionMuted
+  class state,engine,validate decisionChosen
+  class output decisionFinal
+```
+
+<Callout variant="principle" title="quality move">
+  ### не “15 агентів у чаті”, а pipeline з доказами
+
+  LLM не приймає фінальні факти. Вона лише витягує дані з документів і пояснює
+  невпевнені місця. Якість дають frozen state, source links, детерміновані
+  lookup-таблиці, формули, API НБУ та fail-fast валідація.
+</Callout>
