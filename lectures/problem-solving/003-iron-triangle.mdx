@@ -5,19 +5,24 @@ subtitle: "*** ** *"
 
 ## iron triangle
 
-import ironTriangle from "./assets/iron-triangle.webp";
+import ironTriangle from "./assets/iron-triangle.png";
 
 <div style={{display: 'flex', gap: '2rem', alignItems: 'center', maxWidth: 'var(--content-wide-max-width)'}}>
+  <Figure
+    src={ironTriangle}
+    alt=""
+    caption=""
+    plain
+  />
 
-<Figure
-  src={ironTriangle}
-  alt=""
-  caption=""
-  plain
-/>
-
-<div>
-
+  | потрібно | трейдоф |
+  |-----------|-------------|
+  | швидкість+бюджет | обʼєм (роби менше фіч) |
+  | обʼєм+дедлайн | вартість (більше грошей) |
+  | обʼєм+бюджет | швидкість (зсувай дедлайн) |
 </div>
 
-</div>
+<Callout variant="principle" title="Якість">
+  Дуже важило зрозуміти, що для вас є "успіхом" вашого проекту
+</Callout>
+
